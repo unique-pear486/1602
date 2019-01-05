@@ -114,5 +114,7 @@ void lcdWriteString(unsigned char *str, uint8_t x, uint8_t y);
 void lcdBacklight(void);
 void lcdNoBacklight(void);
 
+void lcdClear(void);
+
 #endif	/* LCD_I2C_H */
 

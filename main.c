@@ -18,9 +18,11 @@
 void main(void) {
     // initialize the device
     SYSTEM_Initialize();
+    __delay_ms(100);
     lcd_initialize(); 
     TRISAbits.TRISA5 = 0;
     
+    /*
     while(1) {
         lcdBacklight();
         LATAbits.LATA5 = 1;
@@ -29,16 +31,25 @@ void main(void) {
         LATAbits.LATA5 = 0;
         __delay_ms(500);        
     }
-//    // Write hello
-//    lcdWriteString("Hello");
-//
-//    // rotate through the characters on the second line
-//    int i = 0x20;
-//    while (1) {
-//        lcdWriteChar(i++, 0, 1);
-//        if (i >= 0x80) { i=0; }
-//        
-//        __delay_ms(1000);
-//        
-//    }
+    */
+    // Write hello
+    //lcdWriteString("Hello");
+
+    // rotate through the characters on the second line
+    int i = 0;
+    while (1) {
+        lcdWriteChar(0x57, 0, 1);
+        __delay_ms(500);
+        lcdWriteChar(0x58, 0, 1);
+        __delay_ms(500);
+        lcdWriteChar(0x59, 0, 1);
+        __delay_ms(500);
+        lcdWriteChar(0x5A, 0, 1);
+        __delay_ms(500);
+        
+        lcdClear();
+        
+        __delay_ms(500);
+        
+    }
 }

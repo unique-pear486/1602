@@ -33,6 +33,7 @@ void lcd_initialize() {
     BK = LCD_BACKLIGHT;
     
     i2cInit();
+    __delay_ms(50);         // need to wait at least 37ms from 5V rail
     lcdSendCommand(0x33);
     __delay_ms(5);
     lcdSendNibble(0x30);
@@ -46,13 +47,14 @@ void lcd_initialize() {
 }
 
 void lcdSendCommand(uint8_t command) {
-    RS = Rs;
+    RS = 0x00;
     lcdSendNibble(command);
     lcdSendNibble(command << 4);
+    __delay_ms(1);          // need to wait for previous command to finish, we just brute-force wait 1ms
 }
 
 void lcdSendData(uint8_t command) {
-    RS = 0x00;
+    RS = Rs;
     lcdSendNibble(command);
     lcdSendNibble(command << 4);
 }
@@ -81,4 +83,18 @@ void lcdBacklight() {
 void lcdNoBacklight() {
     BK = LCD_NOBACKLIGHT;
     lcdSendData(0);
+}
+
+void lcdWriteChar(uint8_t character, uint8_t x, uint8_t y) {
+//    uint8_t a = 0x80;
+//    if (y > 0) {
+//        a = 0xC0;
+//    }
+//    a += x;
+//    lcdSendCommand(a);
+    lcdSendData(character);
+}
+
+void lcdClear(void) {
+    lcdSendCommand(0x01);
 }
