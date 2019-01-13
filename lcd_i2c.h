@@ -50,10 +50,37 @@ void lcd_initialize(void);
 
 /**
     @Summary
-        Writes character to screen at point
+        Set cursor to x, y
 
     @Description
-        Writes character to the screen at x, y.
+        Set cursor location to x, y
+
+    @Preconditions
+        None
+
+    @Param
+        x - The x location of the screen to write to. Range [0-15]
+  
+    @Param
+        y - The y location of the screen to write to. Range [0-1]
+
+    @Returns
+        void
+
+     @Example
+        <code>
+            See lcd_initialize()
+        </code>
+
+*/
+void lcdSetCursor(uint8_t x, uint8_t y);
+
+/**
+    @Summary
+        Writes character to screen
+
+    @Description
+        Writes character to the screen at current cursor
 
     @Preconditions
         None
@@ -61,11 +88,6 @@ void lcd_initialize(void);
     @Param
         character - The character to write. 0x00-0x08 are custom characters,
             0x20-0x79 are ascii characters
-    @Param
-        x - The x location of the screen to write to. Range [0-15]
-  
-    @Param
-        y - The y location of the screen to write to. Range [0-1]
 
     @Returns
         void
@@ -76,16 +98,14 @@ void lcd_initialize(void);
         </code>
 
 */
-
-void lcdWriteChar(uint8_t character, uint8_t x, uint8_t y);
-//void lcdWriteChar(uint8_t character);
+void lcdWriteChar(uint8_t character);
 
 /**
     @Summary
-        Writes a string to screen at point
+        Writes a string to screen
 
     @Description
-        Writes NULL-terminated string to the screen at x, y.
+        Writes NULL-terminated string to the screen
 
     @Preconditions
         None
@@ -93,11 +113,26 @@ void lcdWriteChar(uint8_t character, uint8_t x, uint8_t y);
     @Param
         string - The string to write.
 
-    @Param
-        x - The x location of the screen to write to. Range [0-15]
-  
-    @Param
-        y - The y location of the screen to write to. Range [0-1]
+    @Returns
+        void
+
+     @Example
+        <code>
+            See lcd_initialize()
+        </code>
+
+*/
+void lcdWriteString(unsigned char *str);
+
+/**
+    @Summary
+        Turn on backlight
+
+    @Description
+        Turn on backlight
+
+    @Preconditions
+        None
 
     @Returns
         void
@@ -108,13 +143,79 @@ void lcdWriteChar(uint8_t character, uint8_t x, uint8_t y);
         </code>
 
 */
-void lcdWriteString(unsigned char *str, uint8_t x, uint8_t y);
-//void lcdWriteString(unsigned char *str);
-
 void lcdBacklight(void);
+
+/**
+    @Summary
+        Turn off backlight
+
+    @Description
+        Turn off backlight
+
+    @Preconditions
+        None
+
+    @Returns
+        void
+
+     @Example
+        <code>
+            See lcd_initialize()
+        </code>
+
+*/
 void lcdNoBacklight(void);
 
+/**
+    @Summary
+        Clear the screen and return cursor to 0,0
+
+    @Description
+        Clear the screen and return cursor to 0,0
+
+    @Preconditions
+        None
+
+    @Returns
+        void
+
+     @Example
+        <code>
+            See lcd_initialize()
+        </code>
+
+*/
 void lcdClear(void);
+
+/**
+    @Summary
+        Load a custom character to location x
+
+    @Description
+        Load a custom character to CGRAM location 
+
+    @Preconditions
+        None
+
+    @Param
+        location - The CGRAM location to write to. Range [0-7]
+  
+    @Param
+        data - The character data to write.
+            8 bytes, top to bottom
+            1 is pixel on, 0 is pixel off
+            Only the last 5 bits of each byte are available
+
+    @Returns
+        void
+
+     @Example
+        <code>
+            See lcd_initialize()
+        </code>
+
+*/
+void lcdLoadCustomChar(uint8_t location, uint8_t data[]);
 
 #endif	/* LCD_I2C_H */
 

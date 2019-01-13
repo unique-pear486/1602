@@ -14,8 +14,10 @@
 #include <stdint.h>
 
 void i2cInit(void);
-__bit i2cWrite(uint8_t address, uint8_t data);
-uint8_t i2cRead(uint8_t address);
+__bit i2cWriteByte(uint8_t address, uint8_t data);
+uint8_t i2cReadByte(uint8_t address);
+
+__bit i2cWrite(uint8_t address, uint8_t n, uint8_t *data);
 
 #endif	/* I2C_H */
 

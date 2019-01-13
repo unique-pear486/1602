@@ -32,7 +32,7 @@ void i2cInit() {
     
 }
 
-__bit i2cWrite(uint8_t address, uint8_t data) {
+__bit i2cWriteByte(uint8_t address, uint8_t data) {
     static __bit err = 0;
     // Reset interrupt
     PIR1bits.SSP1IF = 0;
@@ -77,6 +77,57 @@ STOP:
     return err;
 }
 
-uint8_t i2cRead(uint8_t address) {
+__bit i2cWrite(uint8_t address, uint8_t n, uint8_t *data) {    
+    static __bit err = 0;
+    // Reset interrupt
+    PIR1bits.SSP1IF = 0;
+    
+    // Send start bit
+    SSP1CON2bits.SEN = 1;
+    
+    // Wait for it to complete, then send the address
+    while (PIR1bits.SSP1IF != 1) {}
+    
+    PIR1bits.SSP1IF = 0;
+    SSP1BUF = address << 1;
+    
+    // Wait for it to complete, then check if ACK'ed
+    while (PIR1bits.SSP1IF != 1) {}
+    
+    if (SSP1CON2bits.ACKSTAT == 1) {
+        // There was no acknowledge; reset and abort
+        SSP1CON2bits.ACKSTAT = 0;
+        PIR1bits.SSP1IF = 0;
+        
+        err = 1;
+        goto STOP;
+    }
+    
+    // Send data
+    while(n > 0) {
+        SSP1CON2bits.ACKSTAT = 0;
+        PIR1bits.SSP1IF = 0;
+
+        SSP1BUF = *data;
+        while (PIR1bits.SSP1IF != 1) {}
+        if (SSP1CON2bits.ACKSTAT == 1) {
+            // There was no acknowledge; reset and abort
+            SSP1CON2bits.ACKSTAT = 0;
+            err = 1;
+            goto STOP;
+        }
+        data++;
+        n--;
+    }
+    
+STOP:
+    // Send Stop bit and return error status
+    PIR1bits.SSP1IF = 0;    
+    SSP1CON2bits.PEN = 1;
+    while (PIR1bits.SSP1IF != 1) {}
+    return err;
+}
+
+uint8_t i2cReadByte(uint8_t address) {
     return 0;
 }
